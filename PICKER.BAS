@@ -1,4 +1,4 @@
-100 ' Texas Lotto Generator version 0.0.1
+100 ' Texas Lotto Generator version 0.0.2
 200 ' By: Jeff Holst and Gary Stevens
 300 ' Date: May 10, 2019
 400 ' Last Modified: May 27, 2019
