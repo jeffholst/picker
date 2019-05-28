@@ -1,272 +1,338 @@
 100 ' Texas Lotto Generator version 0.0.1
 200 ' By: Jeff Holst and Gary Stevens
 300 ' Date: May 10, 2019
-
-400 ' The following variables are the ones to set per lotto game
-500 '
-600 ' BALLCOUNT%          - Number of balls in game
-700 ' BALLMINNUMBER%      - Lowest ball number in game
-800 ' BALLMAXNUMBER%      - Highest ball number in game
-900 ' HASBONUSBALL%       - Is there a bonus ball? 0 = false, 1 = true
-1000 ' BONUSBALLMINNUMBER% - Lowest bonus ball number
-1100 ' BONUSBALLMAXNUMBER% - Allow duplicate numbers? 0 = false, 1 = true
-
-1200 ' ******** Variables below here probably do not need to be tweaked
-
-1300 DIM BALLS%(12)           ' Array of normal ball values
-1400 DIM TEMPBALLS%(100)      ' Array of temp ball values
-1500 BONUSBALL% = 0           ' Value of bonus ball 
-1600 ORDERNUMBERS% = 0        ' Order numbers? 0 = false, 1 = true
-1700 GAMENAME$ = ""           ' Name of game
-
-1800 RANDOMIZE TIMER
-1900 GOTO 20500 ' START
-
-2000 ' **********************************************************
-2100 '  ___                    _          _ _ 
-2200 ' | _ \_____ __ _____ _ _| |__  __ _| | |
-2300 ' |  _/ _ \ V  V / -_) '_| '_ \/ _` | | |
-2400 ' |_| \___/\_/\_/\___|_| |_.__/\__,_|_|_|  
-2500 '
-2600 GAMENAME$ = "Powerball"                            
-2700 BALLCOUNT% = 5
-2800 BALLMINNUMBER% = 1
-2900 BALLMAXNUMBER% = 69
-3000 HASBONUSBALL% = 1
-3100 BONUSBALLMINNUMBER% = 1
-3200 BONUSBALLMAXNUMBER% = 35
-3300 ALLOWDUPES% = 0
-3400 RETURN 
-
-
-3500 ' ***********************************************************
-3600 '
-3700 '  __  __                 __  __ _ _ _ _             
-3800 ' |  \/  |___ __ _ __ _  |  \/  (_) | (_)___ _ _  ___
-3900 ' | |\/| / -_) _` / _` | | |\/| | | | | / _ \ ' \(_-<
-4000 ' |_|  |_\___\__, \__,_| |_|  |_|_|_|_|_\___/_||_/__/
-4100 '            |___/    
-4200 '      
-4300 GAMENAME$ = "MegaMillions"  
-4400 BALLCOUNT% = 5
-4500 BALLMINNUMBER% = 1
-4600 BALLMAXNUMBER% = 70
-4700 HASBONUSBALL% = 1
-4800 BONUSBALLMINNUMBER% = 1
-4900 BONUSBALLMAXNUMBER% = 25
-5000 ALLOWDUPES% = 0
-5100 RETURN 
-
-
-5200 ' ***********************************************************
-5300 '
-5400 '  _        _   _         _____                
-5500 ' | |   ___| |_| |_ ___  |_   _|____ ____ _ ___
-5600 ' | |__/ _ \  _|  _/ _ \   | |/ -_) \ / _` (_-<
-5700 ' |____\___/\__|\__\___/   |_|\___/_\_\__,_/__/
-5800 '
-5900 GAMENAME$ = "Lotto Texas"  
-6000 BALLCOUNT% = 6
-6100 BALLMINNUMBER% = 1
-6200 BALLMAXNUMBER% = 54
-6300 HASBONUSBALL% = 0
-6400 BONUSBALLMINNUMBER% = 0
-6500 BONUSBALLMAXNUMBER% = 0
-6600 ALLOWDUPES% = 0
-6700 RETURN 
-
-
+400 ' Last Modified: May 27, 2019
+500 ' 
+600 ' The following variables are the ones to set per lotto game
+700 '
+800 ' BALLCOUNT%          - Number of balls in game
+900 ' BALLMINNUMBER%      - Lowest ball number in game
+1000 ' BALLMAXNUMBER%      - Highest ball number in game
+1100 ' HASBONUSBALL%       - Is there a bonus ball? 0 = false, 1 = true
+1200 ' BONUSBALLMINNUMBER% - Lowest bonus ball number
+1300 ' BONUSBALLMAXNUMBER% - Allow duplicate numbers? 0 = false, 1 = true
+1400 ' 
+1500 ' ******** Variables below here probably do not need to be tweaked
+1600 ' 
+1700 DIM BALLS%(12)           ' Array of normal ball values
+1800 DIM SORTEDBALLS%(12)     ' Array of sorted ball values
+1900 DIM TEMPBALLS%(100)      ' Array of temp ball values
+2000 BONUSBALL% = 0           ' Value of bonus ball 
+2100 ORDERNUMBERS% = 0        ' Order numbers? 0 = false, 1 = true
+2200 GAMENAME$ = ""           ' Name of game
+2300 FIRSTRUN% = 1            ' Display a random game on first run
+2400 ' 
+2500 ' 
+2600 RANDOMIZE TIMER
+2700 CLS
+2800 GOTO 29300 ' START
+2900 ' 
+3000 ' **********************************************************
+3100 LOCATE 1,1
+3200 COLOR 6,0
+3300 PRINT "  ___                    _          _ _                      "
+3400 PRINT " | _ \_____ __ _____ _ _| |__  __ _| | |                     "
+3500 PRINT " |  _/ _ \ V  V / -_) '_| '_ \/ _` | | |                     "
+3600 PRINT " |_| \___/\_/\_/\___|_| |_.__/\__,_|_|_|                     " 
+3700 '
+3800 PRINT "                                                             "
+3900 GAMENAME$ = "Powerball"                            
+4000 BALLCOUNT% = 5
+4100 BALLMINNUMBER% = 1
+4200 BALLMAXNUMBER% = 69
+4300 HASBONUSBALL% = 1
+4400 BONUSBALLMINNUMBER% = 1
+4500 BONUSBALLMAXNUMBER% = 35
+4600 ALLOWDUPES% = 0
+4700 GOTO 18500
+4800 '
+4900 ' ***********************************************************
+5000 LOCATE 1,1
+5100 COLOR 6,0
+5200 PRINT "  __   _                 __  __ _ _ _ _                      "
+5300 PRINT " |  \/  |___ __ _ __ _  |  \/  (_) | (_)___ _ _  ___         "
+5400 PRINT " | |\/| / -_) _` / _` | | |\/| | | | | / _ \ ' \(_-<         "
+5500 PRINT " |_|  |_\___\__, \__,_| |_|  |_|_|_|_|_\___/_||_/__/         "
+5600 PRINT "            |___/                                            "
+5700 '
+5800 GAMENAME$ = "Mega Millions"  
+5900 BALLCOUNT% = 5
+6000 BALLMINNUMBER% = 1
+6100 BALLMAXNUMBER% = 70
+6200 HASBONUSBALL% = 1
+6300 BONUSBALLMINNUMBER% = 1
+6400 BONUSBALLMAXNUMBER% = 25
+6500 ALLOWDUPES% = 0
+6600 GOTO 18500 
+6700 ' 
 6800 ' ***********************************************************
-6900 '
-7000 '  _____                  _____              ___ _            
-7100 ' |_   _|____ ____ _ ___ |_   _|_ __ _____  / __| |_ ___ _ __ 
-7200 '   | |/ -_) \ / _` (_-<   | | \ V  V / _ \ \__ \  _/ -_) '_ \
-7300 '   |_|\___/_\_\__,_/__/   |_|  \_/\_/\___/ |___/\__\___| .__/
-7400 '                                                       |_|   
-7500 '
-7600 GAMENAME$ = "Texas Two Step"  
-7700 BALLCOUNT% = 4
-7800 BALLMINNUMBER% = 1
-7900 BALLMAXNUMBER% = 35
-8000 HASBONUSBALL% = 1
-8100 BONUSBALLMINNUMBER% = 1
-8200 BONUSBALLMAXNUMBER% = 35
-8300 ALLOWDUPES% = 0
-8400 RETURN 
-
-
-8500 ' ***********************************************************
-8600 '
-8700 '    _   _ _             _  _     _   _    _           
-8800 '   /_\ | | |  ___ _ _  | \| |___| |_| |_ (_)_ _  __ _ 
-8900 '  / _ \| | | / _ \ '_| | .` / _ \  _| ' \| | ' \/ _` |
-9000 ' /_/ \_\_|_| \___/_|   |_|\_\___/\__|_||_|_|_||_\__, |
-9100 '                                                |___/ 
-9200 '
-9300 GAMENAME$ = "All or Nothing"  
-9400 BALLCOUNT% = 12
-9500 BALLMINNUMBER% = 1
-9600 BALLMAXNUMBER% = 24
-9700 HASBONUSBALL% = 0
-9800 BONUSBALLMINNUMBER% = 0
-9900 BONUSBALLMAXNUMBER% = 0
-10000 ALLOWDUPES% = 0
-10100 RETURN 
-
-
-10200 ' ***********************************************************
-10300 '
-10400 '  ___ _    _     ____
-10500 ' | _ (_)__| |__ |__ /
-10600 ' |  _/ / _| / /  |_ \
-10700 ' |_| |_\__|_\_\ |___/
-10800 '
-10900 GAMENAME$ = "Pick 3"  
-11000 BALLCOUNT% = 3
-11100 BALLMINNUMBER% = 0
-11200 BALLMAXNUMBER% = 9
-11300 HASBONUSBALL% = 0
-11400 BONUSBALLMINNUMBER% = 0
-11500 BONUSBALLMAXNUMBER% = 0
-11600 ALLOWDUPES% = 1
-11700 RETURN                 
-
-
-11800 ' ***********************************************************
-11900 '
-12000 '  ___       _ _        _ _  
-12100 ' |   \ __ _(_) |_  _  | | | 
-12200 ' | |) / _` | | | || | |_  _|
-12300 ' |___/\__,_|_|_|\_, |   |_| 
-12400 '                 |__/ 
-12500 '
-12600 GAMENAME$ = "Daily 4"  
-12700 BALLCOUNT% = 4
-12800 BALLMINNUMBER% = 0
-12900 BALLMAXNUMBER% = 9
-13000 HASBONUSBALL% = 0
-13100 BONUSBALLMINNUMBER% = 0
-13200 BONUSBALLMAXNUMBER% = 0
-13300 ALLOWDUPES% = 1
-13400 RETURN   
-
-
-13500 ' ***********************************************************
-13600 '   ___         _      ___ _         
-13700 '  / __|__ _ __| |_   | __(_)_ _____ 
-13800 ' | (__/ _` (_-< ' \  | _|| \ V / -_)
-13900 '  \___\__,_/__/_||_| |_| |_|\_/\___|
-14000 '
-14100 GAMENAME$ = "Cash Five"  
-14200 BALLCOUNT% = 5
-14300 BALLMINNUMBER% = 1
-14400 BALLMAXNUMBER% = 37
-14500 HASBONUSBALL% = 0
-14600 BONUSBALLMINNUMBER% = 0
-14700 BONUSBALLMAXNUMBER% = 0
-14800 ALLOWDUPES% = 0
-14900 RETURN   
-
-
-15000 '   
-15100 ' GENERATE BALLS
-
-15200 IF ALLOWDUPES% = 0 THEN GOTO 15800
-15300 ' **************** Generate Balls Dupes OK *****************
-15400 FOR LOOP1% = 0 TO BALLCOUNT% - 1
-15500 BALLS%(LOOP1%) = INT(RND * (BALLMAXNUMBER% + 1)) + BALLMINNUMBER%
-15600 NEXT LOOP1%
-15700 GOTO 17600
-15800 ' ************ Generate Balls No Dupes **********************
-15900 ' Generate a temp array of all possible balls
-16000 COUNTER% = BALLMINNUMBER%
-16100 FOR LOOP1% = 0 TO BALLMAXNUMBER% - BALLMINNUMBER%
-16200 TEMPBALLS%(LOOP1%) = COUNTER%
-16300 COUNTER% = COUNTER% + 1
-16400 NEXT LOOP1%
-16500 ' Randomize the temp ball array
-16600 FOR LOOP1% = 0 TO BALLMAXNUMBER% - BALLMINNUMBER%
-16700 TEMP% = TEMPBALLS%(LOOP1%)
-16800 INDEX% = INT(RND * BALLMAXNUMBER% - BALLMINNUMBER%)
-16900 TEMPBALLS%(LOOP1%) = TEMPBALLS%(INDEX%)
-17000 TEMPBALLS%(INDEX%) = TEMP%
-17100 NEXT LOOP1%
-17200 ' Pull appropriate number of randomized temp balls to actual balls array
-17300 FOR LOOP1% = 0 TO BALLCOUNT% - 1
-17400 BALLS%(LOOP1%) = TEMPBALLS%(LOOP1%)
-17500 NEXT LOOP1%
-17600 IF HASBONUSBALL% = 0 THEN GOTO 17900
-17700 ' ********************* Select Bonus Ball *******************
-17800 BONUSBALL% = INT(RND * BONUSBALLMAXNUMBER%) + BONUSBALLMINNUMBER%
-17900 IF ORDERNUMBERS% = 0 THEN GOTO 19300
-18000 ' ********************* Bubble Sort *************************
-18100 FOR LOOP1% = 0 TO BALLCOUNT% - 2
-18200 FOR LOOP2% = 0 TO BALLCOUNT% - 2
-18300 IF BALLS%(LOOP2%) > BALLS%(LOOP2%  + 1) THEN GOSUB 18700
-18400 NEXT LOOP2%
-18500 NEXT LOOP1%
-18600 GOTO 19300
-18700 TEMP% = BALLS%(LOOP2%)
-18800 BALLS%(LOOP2%) = BALLS%(LOOP2% + 1)
-18900 BALLS%(LOOP2% + 1) = TEMP%
-19000 RETURN
-19100 GOSUB 19300
-19200 END
-19300 ' ****************** Print Balls ****************************
-19400 OUTPUT$ = GAMENAME$ + ":"
-19500 ADDCOMMA% = 0
-19600 FOR LOOP1% = 0 TO BALLCOUNT% - 1
-19700 IF ADDCOMMA% = 1 THEN OUTPUT$ = OUTPUT$ + ","
-19800 OUTPUT$ = OUTPUT$ + STR$(BALLS%(LOOP1%))
-19900 ADDCOMMA% = 1
-20000 NEXT LOOP1%
-20100 IF HASBONUSBALL% = 0 THEN GOTO 20300
-20200 OUTPUT$ = OUTPUT$ + ". Bonus Ball:" + STR$(BONUSBALL%)
-20300 PRINT OUTPUT$
-20400 RETURN 
-
-
-20500 ' ***********************************************************
-20600 '
-20700 '   ___ _            _   
-20800 '  / __| |_ __ _ _ _| |_ 
-20900 '  \__ \  _/ _` | '_|  _|
-21000 '  |___/\__\__,_|_|  \__|
+6900 LOCATE 1,1
+7000 COLOR 6,0
+7100 PRINT "  _        _   _         _____                               "            
+7200 PRINT " | |   ___| |_| |_ ___  |_   _|____ ____ _ ___               "
+7300 PRINT " | |__/ _ \  _|  _/ _ \   | |/ -_) \ / _` (_-<               "
+7400 PRINT " |____\___/\__|\__\___/   |_|\___/_\_\__,_/__/               "
+7500 PRINT "                                                             "
+7600 '
+7700 GAMENAME$ = "Lotto Texas"  
+7800 BALLCOUNT% = 6
+7900 BALLMINNUMBER% = 1
+8000 BALLMAXNUMBER% = 54
+8100 HASBONUSBALL% = 0
+8200 BONUSBALLMINNUMBER% = 0
+8300 BONUSBALLMAXNUMBER% = 0
+8400 ALLOWDUPES% = 0
+8500 GOTO 18500 
+8600 ' 
+8700 ' ***********************************************************
+8800 LOCATE 1,1
+8900 COLOR 6,0
+9000 PRINT "  _____                  _____              ___ _            "       
+9100 PRINT " |_   _|____ ____ _ ___ |_   _|_ __ _____  / __| |_ ___ _ __ "
+9200 PRINT "   | |/ -_) \ / _` (_-<   | | \ V  V / _ \ \__ \  _/ -_) '_ \"
+9300 PRINT "   |_|\___/_\_\__,_/__/   |_|  \_/\_/\___/ |___/\__\___| .__/"
+9400 PRINT "                                                       |_|   "
+9500 PRINT '
+9600 GAMENAME$ = "Texas Two Step"  
+9700 BALLCOUNT% = 4
+9800 BALLMINNUMBER% = 1
+9900 BALLMAXNUMBER% = 35
+10000 HASBONUSBALL% = 1
+10100 BONUSBALLMINNUMBER% = 1
+10200 BONUSBALLMAXNUMBER% = 35
+10300 ALLOWDUPES% = 0
+10400 GOTO 18500 
+10500 ' 
+10600 ' ***********************************************************
+10700 LOCATE 1,1
+10800 COLOR 6,0
+10900 PRINT "    _   _ _             _  _     _   _    _                  "        
+11000 PRINT "   /_\ | | |  ___ _ _  | \| |___| |_| |_ (_)_ _  __ _        "
+11100 PRINT "  / _ \| | | / _ \ '_| | .` / _ \  _| ' \| | ' \/ _` |       "
+11200 PRINT " /_/ \_\_|_| \___/_|   |_|\_\___/\__|_||_|_|_||_\__, |       "
+11300 PRINT "                                                |___/        "
+11400 PRINT '
+11500 GAMENAME$ = "All or Nothing"  
+11600 BALLCOUNT% = 12
+11700 BALLMINNUMBER% = 1
+11800 BALLMAXNUMBER% = 24
+11900 HASBONUSBALL% = 0
+12000 BONUSBALLMINNUMBER% = 0
+12100 BONUSBALLMAXNUMBER% = 0
+12200 ALLOWDUPES% = 0
+12300 GOTO 18500 
+12400 ' 
+12500 ' ***********************************************************
+12600 LOCATE 1,1
+12700 COLOR 6,0
+12800 PRINT "  ___ _    _     ____                                        "
+12900 PRINT " | _ (_)__| |__ |__ /                                        "
+13000 PRINT " |  _/ / _| / /  |_ \                                        "
+13100 PRINT " |_| |_\__|_\_\ |___/                                        "
+13200 PRINT "                                                             "
+13300 PRINT '
+13400 GAMENAME$ = "Pick 3"  
+13500 BALLCOUNT% = 3
+13600 BALLMINNUMBER% = 0
+13700 BALLMAXNUMBER% = 9
+13800 HASBONUSBALL% = 0
+13900 BONUSBALLMINNUMBER% = 0
+14000 BONUSBALLMAXNUMBER% = 0
+14100 ALLOWDUPES% = 1
+14200 GOTO 18500                 
+14300 ' 
+14400 ' ***********************************************************
+14500 LOCATE 1,1
+14600 COLOR 6,0
+14700 PRINT "  ___       _ _        _ _                                   "
+14800 PRINT " |   \ __ _(_) |_  _  | | |                                  "
+14900 PRINT " | |) / _` | | | || | |_  _|                                 "
+15000 PRINT " |___/\__,_|_|_|\_, |   |_|                                  "
+15100 PRINT "                |__/                                         "
+15200 PRINT '
+15300 GAMENAME$ = "Daily 4"  
+15400 BALLCOUNT% = 4
+15500 BALLMINNUMBER% = 0
+15600 BALLMAXNUMBER% = 9
+15700 HASBONUSBALL% = 0
+15800 BONUSBALLMINNUMBER% = 0
+15900 BONUSBALLMAXNUMBER% = 0
+16000 ALLOWDUPES% = 1
+16100 GOTO 18500   
+16200 ' 
+16300 ' ***********************************************************
+16400 LOCATE 1,1
+16500 COLOR 6,0
+16600 PRINT "   ___         _      ___ _                                  "  
+16700 PRINT "  / __|__ _ __| |_   | __(_)_ _____                          "
+16800 PRINT " | (__/ _` (_-< ' \  | _|| \ V / -_)                         "
+16900 PRINT "  \___\__,_/__/_||_| |_| |_|\_/\___|                         "
+17000 PRINT "                                                             "
+17100 PRINT '
+17200 GAMENAME$ = "Cash Five"  
+17300 BALLCOUNT% = 5
+17400 BALLMINNUMBER% = 1
+17500 BALLMAXNUMBER% = 35
+17600 HASBONUSBALL% = 0
+17700 BONUSBALLMINNUMBER% = 0
+17800 BONUSBALLMAXNUMBER% = 0
+17900 ALLOWDUPES% = 0 
+18000 ' 
+18100 ' ***********************************************************   
+18200 '
+18300 ' GENERATE BALLS
+18400 ' 
+18500 IF ALLOWDUPES% = 0 THEN GOTO 20000
+18600 '
+18700 ' **************** Generate Balls Dupes OK *****************
+18800 '
+18900 FOR LOOP1% = 0 TO BALLCOUNT% - 1
+19000 RBALL% = INT(RND * (BALLMAXNUMBER% + 1)) + BALLMINNUMBER%
+19100 BALLS%(LOOP1%) = RBALL%
+19200 SORTEDBALLS%(LOOP1%) = RBALL%
+19300 NEXT LOOP1%
+19400 GOTO 22200
+19500 '
+19600 ' ************ Generate Balls No Dupes **********************
+19700 '
+19800 ' Generate a temp array of all possible balls
+19900 '
+20000 COUNTER% = BALLMINNUMBER%
+20100 FOR LOOP1% = 0 TO BALLMAXNUMBER% - BALLMINNUMBER%
+20200 TEMPBALLS%(LOOP1%) = COUNTER%
+20300 COUNTER% = COUNTER% + 1
+20400 NEXT LOOP1%
+20500 '
+20600 ' Randomize the temp ball array
+20700 '
+20800 FOR LOOP1% = 0 TO BALLMAXNUMBER% - BALLMINNUMBER%
+20900 TEMP% = TEMPBALLS%(LOOP1%)
+21000 INDEX% = INT(RND * BALLMAXNUMBER% - BALLMINNUMBER% + 1)
 21100 '
-
-21200 CLS 
-
-
-21300 GOSUB 2000 ' Set up for Powerball
-21400 GOSUB 15200 ' Generate and print
-
-21500 GOSUB 3500 ' Set up for Mega Millions
-21600 GOSUB 15200 ' Generate and print
-
-21700 GOSUB 5200 ' Set up for Lotto Texas
-21800 GOSUB 15200 ' Generate and print
-
-21900 GOSUB 6800 ' Set up for Texas Two Step
-22000 GOSUB 15200 ' Generate and print
-
-22100 GOSUB 8500 ' Set up for All or Nothing
-22200 GOSUB 15200 ' Generate and print
-
-22300 GOSUB 10200 ' Set up for Pick 3
-22400 GOSUB 15200 ' Generate and print
-
-22500 GOSUB 11800 ' Set up for Daily 4
-22600 GOSUB 15200 ' Generate and print
-
-22700 GOSUB 13500 ' Set up for Cash Five
-22800 GOSUB 15200 ' Generate and print
-
-22900 PRINT
-23000 PRINT "(Q)uit, (O)rdered Numbers, or (U)nordered  Numbers."
-23100 IN$ = INKEY$
-23200 IF IN$ = "" THEN 23100
-23300 IF IN$ = "q" OR IN$ = "Q" THEN END
-23400 IF IN$ = "o" OR IN$ = "O" THEN ORDERNUMBERS% = 1: GOTO 20500
-23500 IF IN$ = "u" OR IN$ = "U" THEN ORDERNUMBERS% = 0: GOTO 20500
-23600 GOTO 23100
+21200 TEMPBALLS%(LOOP1%) = TEMPBALLS%(INDEX%)
+21300 TEMPBALLS%(INDEX%) = TEMP%
+21400 NEXT LOOP1%
+21500 '
+21600 ' Pull appropriate number of randomized temp balls to actual balls array
+21700 '
+21800 FOR LOOP1% = 0 TO BALLCOUNT% - 1
+21900 BALLS%(LOOP1%) = TEMPBALLS%(LOOP1%)
+22000 SORTEDBALLS%(LOOP1%) = TEMPBALLS%(LOOP1%)
+22100 NEXT LOOP1%
+22200 LOCATE 7,1
+22300 PRINT "                                                                            "
+22400 LOCATE 7,1
+22500 COLOR 5,0
+22600 TEMP1$ = STR$(BALLMINNUMBER%)
+22700 TEMP1$ = MID$(TEMP1$, 2, LEN(TEMP1$) - 1)
+22800 TEMP2$ = STR$(BALLMAXNUMBER%)
+22900 TEMP2$ = MID$(TEMP2$, 2, LEN(TEMP2$) - 1)
+23000 TITLE$ = "T E X A S <> " + GAMENAME$ + " :" + STR$(BALLCOUNT%) + "[" + TEMP1$ + "-" + TEMP2$ + "]"
+23100 IF HASBONUSBALL% = 0 THEN GOTO 24100
+23200 '
+23300 ' ********************* Select Bonus Ball *******************
+23400 '
+23500 BONUSBALL% = INT(RND * BONUSBALLMAXNUMBER%) + BONUSBALLMINNUMBER%
+23600 TEMP1$ = STR$(BONUSBALLMINNUMBER%)
+23700 TEMP1$ = MID$(TEMP1$, 2, LEN(TEMP1$) - 1)
+23800 TEMP2$ = STR$(BONUSBALLMAXNUMBER%)
+23900 TEMP2$ = MID$(TEMP2$, 2, LEN(TEMP2$) - 1)
+24000 TITLE$ = TITLE$ + " and" + STR$(BONUSBALLMINNUMBER%) + "[" + TEMP1$ + "-" + TEMP2$ + "]"
+24100 PRINT TITLE$
+24200 '
+24300 ' ********************* Bubble Sort *************************
+24400 '
+24500 FOR LOOP1% = 0 TO BALLCOUNT% - 2
+24600 FOR LOOP2% = 0 TO BALLCOUNT% - 2
+24700 IF SORTEDBALLS%(LOOP2%) > SORTEDBALLS%(LOOP2%  + 1) THEN GOSUB 25100
+24800 NEXT LOOP2%
+24900 NEXT LOOP1%
+25000 GOTO 25800
+25100 TEMP% = SORTEDBALLS%(LOOP2%)
+25200 SORTEDBALLS%(LOOP2%) = SORTEDBALLS%(LOOP2% + 1)
+25300 SORTEDBALLS%(LOOP2% + 1) = TEMP%
+25400 RETURN
+25500 GOSUB 25800
+25600 END
+25700 '
+25800 ' ****************** Print Balls ****************************
+25900 '
+26000 LOCATE 9,1
+26100 PRINT "                                                                            "
+26200 LOCATE 9,1
+26300 COLOR 11,0
+26400 PRINT GAMENAME$ + ":"
+26500 LOCATE 9, LEN(GAMENAME$) + 2
+26600 OUTPUT$ = ""
+26700 COLOR 5,0
+26800 ADDCOMMA% = 0
+26900 COLOR 12, 0
+27000 FOR LOOP1% = 0 TO BALLCOUNT% - 1
+27100 IF ADDCOMMA% = 1 THEN OUTPUT$ = OUTPUT$ + ",": LOCATE 9, LEN(GAMENAME$) + LEN(OUTPUT$) + 1: PRINT ","
+27200 IF ORDERNUMBERS% = 0 THEN MYOUT$ = STR$(BALLS%(LOOP1%)) ELSE MYOUT$ = STR$(SORTEDBALLS%(LOOP1%))
+27300 LOCATE 9, LEN(GAMENAME$) + LEN(OUTPUT$) + 2
+27400 PRINT MYOUT$
+27500 OUTPUT$ = OUTPUT$ + MYOUT$
+27600 ADDCOMMA% = 1
+27700 NEXT LOOP1%
+27800 IF HASBONUSBALL% = 0 THEN GOTO 29300
+27900 COLOR 11,0
+28000 LOCATE 9, LEN(GAMENAME$) + LEN(OUTPUT$) + 2
+28100 PRINT " Bonus Ball:"
+28200 LOCATE 9, LEN(GAMENAME$) + LEN(OUTPUT$) + 14
+28300 COLOR 12,0
+28400 PRINT STR$(BONUSBALL%)
+28500 ' 
+28600 ' ***********************************************************
+28700 '   ___ _            _   
+28800 '  / __| |_ __ _ _ _| |_ 
+28900 '  \__ \  _/ _` | '_|  _|
+29000 '  |___/\__\__,_|_|  \__|
+29100 '
+29200 '
+29300 LOCATE 11,1
+29400 COLOR 2,0
+29500 PRINT "(Q)uit, "
+29600 IF ORDERNUMBERS% = 1 THEN COLOR 14, 0
+29700 LOCATE 11, 9
+29800 PRINT "in (O)rder"
+29900 COLOR 2, 0
+30000 LOCATE 11, 19
+30100 PRINT ", "
+30200 IF ORDERNUMBERS% = 0 THEN COLOR 14, 0
+30300 LOCATE 11, 21
+30400 PRINT "(U)nsorted"
+30500 COLOR 2, 0
+30600 LOCATE 11, 31
+30700 PRINT ", (P)owerball, (M)ega Millions"
+30800 PRINT ""
+30900 PRINT "(L)otto Texas, (C)ash Five, Pick (3), (D)aily 4"
+31000 PRINT ""
+31100 PRINT "(A)ll or Nothing, (T)exas Two Step, or (R)andom"
+31200 IF FIRSTRUN% = 1 THEN GOTO 32800      
+31300 IN$ = INKEY$
+31400 IF IN$ = "" THEN 31300
+31500 IF IN$ = "q" OR IN$ = "Q" THEN CLS : COLOR 7,0: END
+31600 IF IN$ = "o" OR IN$ = "O" THEN ORDERNUMBERS% = 1: GOTO 26000
+31700 IF IN$ = "u" OR IN$ = "U" THEN ORDERNUMBERS% = 0: GOTO 26000
+31800 IF IN$ = "p" OR IN$ = "P" THEN GOTO 3100     ' Powerball
+31900 IF IN$ = "m" OR IN$ = "M" THEN GOTO 5000     ' Mega Millions
+32000 IF IN$ = "l" OR IN$ = "L" THEN GOTO 6900     ' Lotto Texas
+32100 IF IN$ = "c" OR IN$ = "C" THEN GOTO 16400    ' Cash Five
+32200 IF IN$ = "d" OR IN$ = "D" THEN GOTO 14500    ' Daily 4
+32300 IF IN$ = "a" OR IN$ = "A" THEN GOTO 10700    ' All or Nothing
+32400 IF IN$ = "t" OR IN$ = "T" THEN GOTO 8800     ' Texas Two Step
+32500 IF IN$ = "r" OR IN$ = "R" THEN GOTO 32900    ' Random
+32600 IF IN$ = "3" THEN GOTO 12600
+32700 GOTO 31300
+32800 FIRSTRUN% = 0
+32900 GAME% = INT(RND * 8) + 1
+33000 IF GAME% = 1 THEN GOTO 3100
+33100 IF GAME% = 2 THEN GOTO 5000
+33200 IF GAME% = 3 THEN GOTO 6900
+33300 IF GAME% = 4 THEN GOTO 16400
+33400 IF GAME% = 5 THEN GOTO 12600
+33500 IF GAME% = 6 THEN GOTO 14500
+33600 IF GAME% = 7 THEN GOTO 10700
+33700 GOTO 8800
 
