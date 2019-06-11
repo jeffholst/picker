@@ -1,9 +1,9 @@
 100 ' Texas Lotto Generator
-200 VERSION$ = "0.0.5"
+200 VERSION$ = "0.0.8"
 300 ' By: Jeff Holst and Gary Stevens
 400 ' Date: May 10, 2019
-500 ' Last Modified: June 01, 2019
-600 ' 
+500 ' Last Modified: June 10, 2019
+600 '
 700 ' The following variables are the ones to set per lotto game
 800 '
 900 ' BALLCOUNT%          - Number of balls in game
@@ -12,13 +12,13 @@
 1200 ' HASBONUSBALL%       - Is there a bonus ball? 0 = false, 1 = true
 1300 ' BONUSBALLMINNUMBER% - Lowest bonus ball number
 1400 ' BONUSBALLMAXNUMBER% - Allow duplicate numbers? 0 = false, 1 = true
-1500 ' 
+1500 '
 1600 ' ******** Variables below here probably do not need to be tweaked
-1700 ' 
+1700 '
 1800 DIM BALLS%(12)           ' Array of normal ball values
 1900 DIM SORTEDBALLS%(12)     ' Array of sorted ball values
 2000 DIM TEMPBALLS%(100)      ' Array of temp ball values
-2100 BONUSBALL% = 0           ' Value of bonus ball 
+2100 BONUSBALL% = 0           ' Value of bonus ball
 2200 ORDERNUMBERS% = 0        ' Order numbers? 0 = false, 1 = true
 2300 GAMENAME$ = ""           ' Name of game
 2400 FIRSTRUN% = 1            ' Display a random game on first run
@@ -27,421 +27,481 @@
 2700 SCREENWIDTH% = 80        ' The character width of the screen
 2800 LASTGAME% = 0            ' Last game number played
 2900 CURRENTGAME% = 0         ' Current game number
-3000 ' 
-3100 ' 
-3200 RANDOMIZE TIMER
-3300 CLS
-3400 GOSUB 22800 ' PRINT VERSTION
-3500 GOSUB 38500 ' MENU
-3600 GOTO 41300 ' INPUT SECTION
-3700 ' 
-3800 ' **********************************************************
-3900 IF LASTGAME% = 1 THEN GOTO 5700
-4000 LOCATE 2,1
-4100 COLOR 6,0
-4200 PRINT "                    ___                    _          _ _                 "
-4300 PRINT "                   | _ \_____ __ _____ _ _| |__  __ _| | |                "
-4400 PRINT "                   |  _/ _ \ V  V / -_) '_| '_ \/ _` | | |                "
-4500 PRINT "                   |_| \___/\_/\_/\___|_| |_.__/\__,_|_|_|                " 
-4600 PRINT "                                                                          "
-4700 PRINT "                                                                          "
-4800 GAMENAME$ = "Powerball"
-4900 BALLCOUNT% = 5
-5000 BALLMINNUMBER% = 1
-5100 BALLMAXNUMBER% = 69
-5200 HASBONUSBALL% = 1
-5300 BONUSBALLMINNUMBER% = 1
-5400 BONUSBALLMAXNUMBER% = 26
-5500 ALLOWDUPES% = 0
-5600 CURRENTGAME% = 1
-5700 GOSUB 28600 ' GENERATE AND PRINT BALLS
-5800 LASTGAME% = 1
-5900 GOTO 41400 ' MENU
-6000 '
-6100 ' ***********************************************************
-6200 IF LASTGAME% = 2 THEN GOTO 8000
-6300 LOCATE 2,1
-6400 COLOR 6,0
-6500 PRINT "               __   _                 __  __ _ _ _ _                     "
-6600 PRINT "              |  \/  |___ __ _ __ _  |  \/  (_) | (_)___ _ _  ___        "
-6700 PRINT "              | |\/| / -_) _` / _` | | |\/| | | | | / _ \ ' \(_-<        "
-6800 PRINT "              |_|  |_\___\__, \__,_| |_|  |_|_|_|_|_\___/_||_/__/        "
-6900 PRINT "                            |___/                                        "
-7000 PRINT "                                                                         "
-7100 GAMENAME$ = "Mega Millions"
-7200 BALLCOUNT% = 5
-7300 BALLMINNUMBER% = 1
-7400 BALLMAXNUMBER% = 70
-7500 HASBONUSBALL% = 1
-7600 BONUSBALLMINNUMBER% = 1
-7700 BONUSBALLMAXNUMBER% = 25
-7800 ALLOWDUPES% = 0
-7900 CURRENTGAME% = 2
-8000 GOSUB 28600 ' GENERATE AND PRINT BALLS
-8100 LASTGAME% = 2
-8200 GOTO 41400 ' MENU
-8300 ' 
-8400 ' ***********************************************************
-8500 IF LASTGAME% = 3 THEN GOTO 10300
-8600 LOCATE 2,1
-8700 COLOR 6,0
-8800 PRINT "                   _        _   _         _____                            "            
-8900 PRINT "                  | |   ___| |_| |_ ___  |_   _|____ ____ _ ___            "
-9000 PRINT "                  | |__/ _ \  _|  _/ _ \   | |/ -_) \ / _` (_-<            "
-9100 PRINT "                  |____\___/\__|\__\___/   |_|\___/_\_\__,_/__/            "
-9200 PRINT "                                                                           "
-9300 PRINT "                                                                           "
-9400 GAMENAME$ = "Lotto Texas"
-9500 BALLCOUNT% = 6
-9600 BALLMINNUMBER% = 1
-9700 BALLMAXNUMBER% = 54
-9800 HASBONUSBALL% = 0
-9900 BONUSBALLMINNUMBER% = 0
-10000 BONUSBALLMAXNUMBER% = 0
-10100 ALLOWDUPES% = 0
-10200 CURRENTGAME% = 3
-10300 GOSUB 28600 ' GENERATE AND PRINT BALLS
-10400 LASTGAME% = 3
-10500 GOTO 41400 ' MENU
-10600 ' 
-10700 ' ***********************************************************
-10800 IF LASTGAME% = 4 THEN GOTO 12600
-10900 LOCATE 2,1
-11000 COLOR 6,0
-11100 PRINT "           _____                  _____              ___ _               "       
-11200 PRINT "          |_   _|____ ____ _ ___ |_   _|_ __ _____  / __| |_ ___ _ __    "
-11300 PRINT "            | |/ -_) \ / _` (_-<   | | \ V  V / _ \ \__ \  _/ -_) '_ \   "
-11400 PRINT "            |_|\___/_\_\__,_/__/   |_|  \_/\_/\___/ |___/\__\___| .__/   "
-11500 PRINT "                                                                |_|      "
-11600 PRINT "                                                                         "
-11700 GAMENAME$ = "Texas Two Step"                
-11800 BALLCOUNT% = 4
-11900 BALLMINNUMBER% = 1
-12000 BALLMAXNUMBER% = 35
-12100 HASBONUSBALL% = 1
-12200 BONUSBALLMINNUMBER% = 1
-12300 BONUSBALLMAXNUMBER% = 35
-12400 ALLOWDUPES% = 0
-12500 CURRENTGAME% = 4
-12600 GOSUB 28600 ' GENERATE AND PRINT BALLS
-12700 LASTGAME% = 4
-12800 GOTO 41400 ' MENU
-12900 ' 
-13000 ' ***********************************************************
-13100 IF LASTGAME% = 5 THEN GOTO 14900
-13200 LOCATE 2,1
-13300 COLOR 6,0
-13400 PRINT "                 _   _ _             _  _     _   _    _                  "        
-13500 PRINT "                /_\ | | |  ___ _ _  | \| |___| |_| |_ (_)_ _  __ _        "
-13600 PRINT "               / _ \| | | / _ \ '_| | .` / _ \  _| ' \| | ' \/ _` |       "
-13700 PRINT "              /_/ \_\_|_| \___/_|   |_|\_\___/\__|_||_|_|_||_\__, |       "
-13800 PRINT "                                                             |___/        "
-13900 PRINT "                                                                          "
-14000 GAMENAME$ = "All or Nothing"
-14100 BALLCOUNT% = 12
-14200 BALLMINNUMBER% = 1
-14300 BALLMAXNUMBER% = 24
-14400 HASBONUSBALL% = 0
-14500 BONUSBALLMINNUMBER% = 0
-14600 BONUSBALLMAXNUMBER% = 0
-14700 ALLOWDUPES% = 0
-14800 CURRENTGAME% = 5
-14900 GOSUB 28600 ' GENERATE AND PRINT BALLS
-15000 LASTGAME% = 5
-15100 GOTO 41400 ' MENU
-15200 ' 
-15300 ' ***********************************************************
-15400 IF LASTGAME% = 6 THEN GOTO 17300
-15500 LOCATE 2,1
-15600 COLOR 6,0
-15700 PRINT "                             ___ _    _       ____                       "
-15800 PRINT "                            | _ (_)__| |__   |__ /                       "
-15900 PRINT "                            |  _/ / _| / /    |_ \                       "
-16000 PRINT "                            |_| |_\__|_\_\   |___/                       "
-16100 PRINT "                                                                         "
-16200 PRINT "                                                                         "
-16300 GAMENAME$ = "Pick 3"
-16400 BALLCOUNT% = 3
-16500 BALLMINNUMBER% = 0
-16600 BALLMAXNUMBER% = 9
-16700 HASBONUSBALL% = 0
-16800 BONUSBALLMINNUMBER% = 0
-16900 BONUSBALLMAXNUMBER% = 0
-17000 ORDERNUMBERS% = 0
-17100 ALLOWDUPES% = 1
-17200 CURRENTGAME% = 6
-17300 GOSUB 28600 ' GENERATE AND PRINT BALLS
-17400 LASTGAME% = 6
-17500 GOTO 41400 ' MENU           
-17600 ' 
-17700 ' ***********************************************************
-17800 IF LASTGAME% = 7 THEN GOTO 19700
-17900 LOCATE 2,1
-18000 COLOR 6,0
-18100 PRINT "                           ___       _ _         _ _                      "
-18200 PRINT "                          |   \ __ _(_) |_  _   | | |                     "
-18300 PRINT "                          | |) / _` | | | || |  |_  _|                    "
-18400 PRINT "                          |___/\__,_|_|_|\_, |    |_|                     "
-18500 PRINT "                                         |__/                             "
-18600 PRINT "                                                                          "
-18700 GAMENAME$ = "Daily 4"
-18800 BALLCOUNT% = 4
-18900 BALLMINNUMBER% = 0
-19000 BALLMAXNUMBER% = 9
-19100 HASBONUSBALL% = 0
-19200 BONUSBALLMINNUMBER% = 0
-19300 BONUSBALLMAXNUMBER% = 0
-19400 ORDERNUMBERS% = 0
-19500 ALLOWDUPES% = 1
-19600 CURRENTGAME% = 7
-19700 GOSUB 28600 ' GENERATE AND PRINT BALLS
-19800 LASTGAME% = 7
-19900 GOTO 41400 ' MENU
-20000 ' 
-20100 ' ***********************************************************
-20200 IF LASTGAME% = 8 THEN GOTO 22000
-20300 LOCATE 2,1
-20400 COLOR 6,0
-20500 PRINT "                        ___         _       ___ _                         "  
-20600 PRINT "                       / __|__ _ __| |_    | __(_)_ _____                 "
-20700 PRINT "                      | (__/ _` (_-< ' \   | _|| \ V / -_)                "
-20800 PRINT "                       \___\__,_/__/_||_|  |_| |_|\_/\___|                "
-20900 PRINT "                                                                          "
-21000 PRINT "                                                                          "
-21100 GAMENAME$ = "Cash Five"
-21200 BALLCOUNT% = 5
-21300 BALLMINNUMBER% = 1
-21400 BALLMAXNUMBER% = 35
-21500 HASBONUSBALL% = 0
-21600 BONUSBALLMINNUMBER% = 0
-21700 BONUSBALLMAXNUMBER% = 0
-21800 ALLOWDUPES% = 0 
-21900 CURRENTGAME% = 8
-22000 GOSUB 28600 ' GENERATE AND PRINT BALLS
-22100 LASTGAME% = 8
-22200 GOTO 41400 ' MENU
-22300 '
-22400 ' ***********************************************************
-22500 '
-22600 ' PRINT VERSION SUBROUTINE
-22700 '
-22800 COLOR 6,0
-22900 LOCATELINE% = 1
-23000 CENTERLINE$ = "VER " + VERSION$
-23100 GOSUB 24900
-23200 RETURN
-23300 '
-23400 ' ***********************************************************
-23500 '
-23600 ' PRINT TITLE SUBROUTINE
-23700 '
-23800 LOCATELINE% = 8
-23900 GOSUB 25700 ' CLEAR LINE
-24000 COLOR 5,0
-24100 CENTERLINE$ = TITLE$
-24200 GOSUB 24900
-24300 RETURN
-24400 ' 
-24500 ' ***********************************************************   
-24600 '
-24700 ' PRINT CENTERED LINE SUBROUTINE
-24800 ' 
-24900 LOCATE LOCATELINE%, (SCREENWIDTH% / 2) - (LEN(CENTERLINE$) / 2)
-25000 PRINT CENTERLINE$
+3000 DIM BANNER$(6)           ' Game name banner array
+3100 '
+3200 '
+3300 RANDOMIZE TIMER
+3400 '
+3500 ' REMOVE MACROS FROM FUNCTION KEYS
+3600 '
+3700 FOR LOOP1% = 2 TO 10
+3800 KEY LOOP1%, ""
+3900 NEXT LOOP1%
+4000 KEY 1, "1" ' SET F1 = 1
+4100 KEY OFF ' HIDE SHORTCUT KEYS
+4200 CLS
+4300 GOSUB 23700 ' PRINT VERSION
+4400 GOSUB 42400 ' MENU
+4500 GOTO 45900 ' INPUT SECTION
+4600 '
+4700 ' **********************************************************
+4800 IF LASTGAME% = 1 THEN GOTO 6600
+4900 COLOR 9,0
+5000 BANNER$(1) = " ___                    _          _ _ "
+5100 BANNER$(2) = "| _ \_____ __ _____ _ _| |__  __ _| | |"
+5200 BANNER$(3) = "|  _/ _ \ V  V / -_) '_| '_ \/ _` | | |"
+5300 BANNER$(4) = "|_| \___/\_/\_/\___|_| |_.__/\__,_|_|_|"
+5400 BANNER$(5) = ""
+5500 BANNER$(6) = ""
+5600 GOSUB 25700 ' PRINT BANNER
+5700 GAMENAME$ = "Powerball"
+5800 BALLCOUNT% = 5
+5900 BALLMINNUMBER% = 1
+6000 BALLMAXNUMBER% = 69
+6100 HASBONUSBALL% = 1
+6200 BONUSBALLMINNUMBER% = 1
+6300 BONUSBALLMAXNUMBER% = 26
+6400 ALLOWDUPES% = 0
+6500 CURRENTGAME% = 1
+6600 GOSUB 32500 ' GENERATE AND PRINT BALLS
+6700 LASTGAME% = 1
+6800 GOTO 46000 ' MENU
+6900 '
+7000 ' ***********************************************************
+7100 IF LASTGAME% = 2 THEN GOTO 8900
+7200 COLOR 9,0
+7300 BANNER$(1) =  " __   _                 __  __ _ _ _ _             "
+7400 BANNER$(2) =  "|  \/  |___ __ _ __ _  |  \/  (_) | (_)___ _ _  ___"
+7500 BANNER$(3) =  "| |\/| / -_) _` / _` | | |\/| | | | | / _ \ ' \(_-<"
+7600 BANNER$(4) =  "|_|  |_\___\__, \__,_| |_|  |_|_|_|_|_\___/_||_/__/"
+7700 BANNER$(5) =  "           |___/                                   "
+7800 BANNER$(6) =  ""
+7900 GOSUB 25700 ' PRINT BANNER
+8000 GAMENAME$ = "Mega Millions"
+8100 BALLCOUNT% = 5
+8200 BALLMINNUMBER% = 1
+8300 BALLMAXNUMBER% = 70
+8400 HASBONUSBALL% = 1
+8500 BONUSBALLMINNUMBER% = 1
+8600 BONUSBALLMAXNUMBER% = 25
+8700 ALLOWDUPES% = 0
+8800 CURRENTGAME% = 2
+8900 GOSUB 32500 ' GENERATE AND PRINT BALLS
+9000 LASTGAME% = 2
+9100 GOTO 46000 ' MENU
+9200 '
+9300 ' ***********************************************************
+9400 IF LASTGAME% = 3 THEN GOTO 11200
+9500 COLOR 9,0
+9600 BANNER$(1) = " _        _   _         _____                "            
+9700 BANNER$(2) = "| |   ___| |_| |_ ___  |_   _|____ ____ _ ___"
+9800 BANNER$(3) = "| |__/ _ \  _|  _/ _ \   | |/ -_) \ / _` (_-<"
+9900 BANNER$(4) = "|____\___/\__|\__\___/   |_|\___/_\_\__,_/__/"
+10000 BANNER$(5) = ""
+10100 BANNER$(6) = ""
+10200 GOSUB 25700 ' PRINT BANNER
+10300 GAMENAME$ = "Lotto Texas"
+10400 BALLCOUNT% = 6
+10500 BALLMINNUMBER% = 1
+10600 BALLMAXNUMBER% = 54
+10700 HASBONUSBALL% = 0
+10800 BONUSBALLMINNUMBER% = 0
+10900 BONUSBALLMAXNUMBER% = 0
+11000 ALLOWDUPES% = 0
+11100 CURRENTGAME% = 3
+11200 GOSUB 32500 ' GENERATE AND PRINT BALLS
+11300 LASTGAME% = 3
+11400 GOTO 46000 ' MENU
+11500 '
+11600 ' ***********************************************************
+11700 IF LASTGAME% = 4 THEN GOTO 13500
+11800 COLOR 9,0
+11900 BANNER$(1) = " _____                  _____              ___ _            "      
+12000 BANNER$(2) = "|_   _|____ ____ _ ___ |_   _|_ __ _____  / __| |_ ___ _ __ "
+12100 BANNER$(3) = "  | |/ -_) \ / _` (_-<   | | \ V  V / _ \ \__ \  _/ -_) '_ \"
+12200 BANNER$(4) = "  |_|\___/_\_\__,_/__/   |_|  \_/\_/\___/ |___/\__\___| .__/"
+12300 BANNER$(5) = "                                                      |_|   "
+12400 BANNER$(6) = ""
+12500 GOSUB 25700 ' PRINT BANNER
+12600 GAMENAME$ = "Texas Two Step"                
+12700 BALLCOUNT% = 4
+12800 BALLMINNUMBER% = 1
+12900 BALLMAXNUMBER% = 35
+13000 HASBONUSBALL% = 1
+13100 BONUSBALLMINNUMBER% = 1
+13200 BONUSBALLMAXNUMBER% = 35
+13300 ALLOWDUPES% = 0
+13400 CURRENTGAME% = 4
+13500 GOSUB 32500 ' GENERATE AND PRINT BALLS
+13600 LASTGAME% = 4
+13700 GOTO 46000 ' MENU
+13800 '
+13900 ' ***********************************************************
+14000 IF LASTGAME% = 5 THEN GOTO 15800
+14100 COLOR 9,0
+14200 BANNER$(1) = "   _   _ _             _  _     _   _    _           "        
+14300 BANNER$(2) = "  /_\ | | |  ___ _ _  | \| |___| |_| |_ (_)_ _  __ _ "
+14400 BANNER$(3) = " / _ \| | | / _ \ '_| | .` / _ \  _| ' \| | ' \/ _` |"
+14500 BANNER$(4) = "/_/ \_\_|_| \___/_|   |_|\_\___/\__|_||_|_|_||_\__, |"
+14600 BANNER$(5) = "                                               |___/ "
+14700 BANNER$(6) = ""
+14800 GOSUB 25700 ' PRINT BANNER
+14900 GAMENAME$ = "All or Nothing"
+15000 BALLCOUNT% = 12
+15100 BALLMINNUMBER% = 1
+15200 BALLMAXNUMBER% = 24
+15300 HASBONUSBALL% = 0
+15400 BONUSBALLMINNUMBER% = 0
+15500 BONUSBALLMAXNUMBER% = 0
+15600 ALLOWDUPES% = 0
+15700 CURRENTGAME% = 5
+15800 GOSUB 32500 ' GENERATE AND PRINT BALLS
+15900 LASTGAME% = 5
+16000 GOTO 46000 ' MENU
+16100 '
+16200 ' ***********************************************************
+16300 IF LASTGAME% = 6 THEN GOTO 18200
+16400 COLOR 9,0
+16500 BANNER$(1) = " ___ _    _       ____"
+16600 BANNER$(2) = "| _ (_)__| |__   |__ /"
+16700 BANNER$(3) = "|  _/ / _| / /    |_ \"
+16800 BANNER$(4) = "|_| |_\__|_\_\   |___/"
+16900 BANNER$(5) = ""
+17000 BANNER$(6) = ""
+17100 GOSUB 25700 ' PRINT BANNER
+17200 GAMENAME$ = "Pick 3"
+17300 BALLCOUNT% = 3
+17400 BALLMINNUMBER% = 0
+17500 BALLMAXNUMBER% = 9
+17600 HASBONUSBALL% = 0
+17700 BONUSBALLMINNUMBER% = 0
+17800 BONUSBALLMAXNUMBER% = 0
+17900 ORDERNUMBERS% = 0
+18000 ALLOWDUPES% = 1
+18100 CURRENTGAME% = 6
+18200 GOSUB 32500 ' GENERATE AND PRINT BALLS
+18300 LASTGAME% = 6
+18400 GOTO 46000 ' MENU          
+18500 '
+18600 ' ***********************************************************
+18700 IF LASTGAME% = 7 THEN GOTO 20600
+18800 COLOR 9,0
+18900 BANNER$(1) = " ___       _ _         _ _  "
+19000 BANNER$(2) = "|   \ __ _(_) |_  _   | | | "
+19100 BANNER$(3) = "| |) / _` | | | || |  |_  _|"
+19200 BANNER$(4) = "|___/\__,_|_|_|\_, |    |_| "
+19300 BANNER$(5) = "               |__/         "
+19400 BANNER$(6) = ""
+19500 GOSUB 25700 ' PRINT BANNER
+19600 GAMENAME$ = "Daily 4"
+19700 BALLCOUNT% = 4
+19800 BALLMINNUMBER% = 0
+19900 BALLMAXNUMBER% = 9
+20000 HASBONUSBALL% = 0
+20100 BONUSBALLMINNUMBER% = 0
+20200 BONUSBALLMAXNUMBER% = 0
+20300 ORDERNUMBERS% = 0
+20400 ALLOWDUPES% = 1
+20500 CURRENTGAME% = 7
+20600 GOSUB 32500 ' GENERATE AND PRINT BALLS
+20700 LASTGAME% = 7
+20800 GOTO 46000 ' MENU
+20900 '
+21000 ' ***********************************************************
+21100 IF LASTGAME% = 8 THEN GOTO 22900
+21200 COLOR 9,0
+21300 BANNER$(1) = "  ___         _       ___ _         "  
+21400 BANNER$(2) = " / __|__ _ __| |_    | __(_)_ _____ "
+21500 BANNER$(3) = "| (__/ _` (_-< ' \   | _|| \ V / -_)"
+21600 BANNER$(4) = " \___\__,_/__/_||_|  |_| |_|\_/\___|"
+21700 BANNER$(5) = ""
+21800 BANNER$(6) = ""
+21900 GOSUB 25700 ' PRINT BANNER
+22000 GAMENAME$ = "Cash Five"
+22100 BALLCOUNT% = 5
+22200 BALLMINNUMBER% = 1
+22300 BALLMAXNUMBER% = 35
+22400 HASBONUSBALL% = 0
+22500 BONUSBALLMINNUMBER% = 0
+22600 BONUSBALLMAXNUMBER% = 0
+22700 ALLOWDUPES% = 0
+22800 CURRENTGAME% = 8
+22900 GOSUB 32500 ' GENERATE AND PRINT BALLS
+23000 LASTGAME% = 8
+23100 GOTO 46000 ' MENU
+23200 '
+23300 ' ***********************************************************
+23400 '
+23500 ' PRINT VERSION SUBROUTINE
+23600 '
+23700 COLOR 9,0
+23800 LOCATELINE% = 1
+23900 PRINT " VER " + VERSION$
+24000 RETURN
+24100 '
+24200 ' ***********************************************************
+24300 '
+24400 ' PRINT TITLE SUBROUTINE
+24500 '
+24600 LOCATELINE% = 9
+24700 GOSUB 27600 ' CLEAR LINE
+24800 COLOR 5,0
+24900 CENTERLINE$ = TITLE$
+25000 GOSUB 26800
 25100 RETURN
-25200 ' 
-25300 ' ***********************************************************   
+25200 '
+25300 ' ************************************************************
 25400 '
-25500 ' CLEAR LINE SUBROUTINE
-25600 ' 
-25700 FOR LOOP1% = 1 TO SCREENWIDTH%
-25800 LOCATE LOCATELINE%, LOOP1%
-25900 PRINT " "
-26000 NEXT LOOP1%
-26100 RETURN 
-26200 ' 
-26300 ' ***********************************************************   
-26400 '
-26500 ' PRINT BALLS CENTERED SUBROUTINE
-26600 ' 
-26700 COLOR 12,0
-26800 IF HASBONUSBALL% = 0 THEN CENTERLINE$ = OUTPUT$: GOTO 24900 ' RETURN in Subroutine
-26900 BONUSBALLLABEL$ = " Bonus Ball:"
-27000 MYLEN% = LEN(OUTPUT$) + LEN(BONUSBALLLABEL$) + LEN(STR$(BONUSBALL%))
-27100 STARTPOSITION% = (SCREENWIDTH% / 2) - (MYLEN%  / 2)
-27200 LOCATE LOCATELINE%, STARTPOSITION%
-27300 PRINT OUTPUT$
-27400 LOCATE LOCATELINE%, STARTPOSITION% + LEN(OUTPUT$)
-27500 COLOR 11,0
-27600 PRINT BONUSBALLLABEL$
-27700 COLOR 12,0
-27800 LOCATE LOCATELINE%, STARTPOSITION% + LEN(OUTPUT$) + LEN(BONUSBALLLABEL$)
-27900 PRINT STR$(BONUSBALL%)
-28000 RETURN 
-28100 ' 
-28200 ' ***********************************************************   
+25500 ' PRINT BANNER SUBROUTINE
+25600 '
+25700 FOR LOOP1% = 1 TO 6
+25800 LOCATELINE% = LOOP1% + 2
+25900 GOSUB 27600 ' CLEAR LINE
+26000 CENTERLINE$ = BANNER$(LOOP1%)
+26100 GOSUB 26800 ' PRINT CENTERED LINE
+26200 NEXT LOOP1%
+26300 '
+26400 ' ***********************************************************  
+26500 '
+26600 ' PRINT CENTERED LINE SUBROUTINE
+26700 '
+26800 LOCATE LOCATELINE%, (SCREENWIDTH% / 2) - (LEN(CENTERLINE$) / 2)
+26900 PRINT CENTERLINE$
+27000 RETURN
+27100 '
+27200 ' ***********************************************************  
+27300 '
+27400 ' CLEAR LINE SUBROUTINE
+27500 '
+27600 FOR LOOP2% = 1 TO SCREENWIDTH%
+27700 LOCATE LOCATELINE%, LOOP2%
+27800 PRINT " "
+27900 NEXT LOOP2%
+28000 RETURN
+28100 '
+28200 ' ***********************************************************  
 28300 '
-28400 ' GENERATE BALLS
-28500 ' 
-28600 IF ALLOWDUPES% = 0 THEN GOTO 29900
-28700 '
-28800 ' DUPLICATE BALLS OKAY
-28900 '
-29000 FOR LOOP1% = 0 TO BALLCOUNT% - 1
-29100 RBALL% = INT(RND * (BALLMAXNUMBER% + 1)) + BALLMINNUMBER%
-29200 BALLS%(LOOP1%) = RBALL%
-29300 SORTEDBALLS%(LOOP1%) = RBALL%
-29400 NEXT LOOP1%
-29500 GOTO 32600
-29600 '
-29700 ' NO DUPLICATE BALLS ALLOWED
-29800 '
-29900 COUNTER% = BALLMINNUMBER%
-30000 FOR LOOP1% = 0 TO BALLMAXNUMBER% - BALLMINNUMBER%
-30100 TEMPBALLS%(LOOP1%) = COUNTER%
-30200 COUNTER% = COUNTER% + 1
-30300 NEXT LOOP1%
+28400 ' PRINT BALLS CENTERED SUBROUTINE
+28500 '
+28600 COLOR 12,0
+28700 IF HASBONUSBALL% = 0 THEN CENTERLINE$ = OUTPUT$: GOTO 26800 ' RETURN in Subroutine
+28800 BONUSBALLLABEL$ = " Bonus Ball:"
+28900 MYLEN% = LEN(OUTPUT$) + LEN(BONUSBALLLABEL$) + LEN(STR$(BONUSBALL%))
+29000 STARTPOSITION% = (SCREENWIDTH% / 2) - (MYLEN%  / 2)
+29100 LOCATE LOCATELINE%, STARTPOSITION%
+29200 PRINT OUTPUT$
+29300 LOCATE LOCATELINE%, STARTPOSITION% + LEN(OUTPUT$)
+29400 COLOR 11,0
+29500 PRINT BONUSBALLLABEL$
+29600 COLOR 12,0
+29700 LOCATE LOCATELINE%, STARTPOSITION% + LEN(OUTPUT$) + LEN(BONUSBALLLABEL$)
+29800 PRINT STR$(BONUSBALL%)
+29900 RETURN
+30000 '
+30100 ' ***********************************************************
+30200 '
+30300 ' PRINTER SUBROUTINE
 30400 '
-30500 ' RANDOMIZE TEMP BALL ARRAY
-30600 '
-30700 FOR LOOP1% = 0 TO BALLMAXNUMBER% - BALLMINNUMBER%
-30800 TEMP% = TEMPBALLS%(LOOP1%)
-30900 INDEX% = INT(RND * BALLMAXNUMBER% - BALLMINNUMBER% + 1)
-31000 '
-31100 TEMPBALLS%(LOOP1%) = TEMPBALLS%(INDEX%)
-31200 TEMPBALLS%(INDEX%) = TEMP%
-31300 NEXT LOOP1%
-31400 '
-31500 ' PUT RANDOMIZED BALLS IN BALL ARRAY
-31600 '
-31700 FOR LOOP1% = 0 TO BALLCOUNT% - 1
-31800 BALLS%(LOOP1%) = TEMPBALLS%(LOOP1%)
-31900 SORTEDBALLS%(LOOP1%) = TEMPBALLS%(LOOP1%)
-32000 NEXT LOOP1%
-32100 ' 
-32200 ' ***********************************************************   
-32300 '
-32400 ' CREATE TITLE WITH GAME RULES
-32500 ' 
-32600 IF CURRENTGAME% = LASTGAME% THEN GOTO 33200                
-32700 TEMP1$ = STR$(BALLMINNUMBER%)
-32800 TEMP1$ = MID$(TEMP1$, 2, LEN(TEMP1$) - 1)
-32900 TEMP2$ = STR$(BALLMAXNUMBER%)
-33000 TEMP2$ = MID$(TEMP2$, 2, LEN(TEMP2$) - 1)
-33100 TITLE$ = " " + GAMENAME$ + " :" + STR$(BALLCOUNT%) + "[" + TEMP1$ + "-" + TEMP2$ + "]" 
-33200 IF HASBONUSBALL% = 0 THEN GOTO 34400
-33300 '
-33400 ' ***********************************************************   
-33500 ' SELECT BONUS BALL
-33600 '
-33700 BONUSBALL% = INT(RND * BONUSBALLMAXNUMBER%) + BONUSBALLMINNUMBER%
-33800 IF CURRENTGAME% = LASTGAME% THEN GOTO 35100
-33900 TEMP1$ = STR$(BONUSBALLMINNUMBER%)
-34000 TEMP1$ = MID$(TEMP1$, 2, LEN(TEMP1$) - 1)
-34100 TEMP2$ = STR$(BONUSBALLMAXNUMBER%)
-34200 TEMP2$ = MID$(TEMP2$, 2, LEN(TEMP2$) - 1)
-34300 TITLE$ = TITLE$ + " and" + STR$(BONUSBALLMINNUMBER%) + "[" + TEMP1$ + "-" + TEMP2$ + "]"
-34400 IF CURRENTGAME% = LASTGAME% THEN GOTO 35100
-34500 GOSUB 23800 ' PRINT TITLE
-34600 '
-34700 ' *********************************************************** 
-34800 '
-34900 ' BUBBLE SORT
-35000 '
-35100 FOR LOOP1% = 0 TO BALLCOUNT% - 2
-35200 FOR LOOP2% = 0 TO BALLCOUNT% - 2
-35300 IF SORTEDBALLS%(LOOP2%) > SORTEDBALLS%(LOOP2%  + 1) THEN GOSUB 35700
-35400 NEXT LOOP2%
-35500 NEXT LOOP1%
-35600 GOTO 36600
-35700 TEMP% = SORTEDBALLS%(LOOP2%)
-35800 SORTEDBALLS%(LOOP2%) = SORTEDBALLS%(LOOP2% + 1)
-35900 SORTEDBALLS%(LOOP2% + 1) = TEMP%
-36000 RETURN
-36100 '
-36200 ' *********************************************************** 
-36300 '
-36400 ' PRINT BALLS SUBROUTINE
-36500 '
-36600 OUTPUT$ = ""
-36700 ADDCOMMA% = 0
-36800 FOR LOOP1% = 0 TO BALLCOUNT% - 1
-36900 IF ADDCOMMA% = 1 THEN OUTPUT$ = OUTPUT$ + ","
-37000 IF ORDERNUMBERS% = 0 THEN MYOUT$ = STR$(BALLS%(LOOP1%)) ELSE MYOUT$ = STR$(SORTEDBALLS%(LOOP1%))
-37100 OUTPUT$ = OUTPUT$ + MYOUT$
-37200 ADDCOMMA% = 1
-37300 NEXT LOOP1%
-37400 LOCATELINE% = 10
-37500 GOSUB 25700 ' CLEAR LINE
-37600 GOSUB 26700 ' CENTER BALLS
-37700 IF ORDERNUMBERS% <> LASTORDERNUMBERS% THEN GOSUB 38500
-37800 RETURN
-37900 ' 
-38000 ' ***********************************************************
-38100 '  
-38200 ' MAIN MENU SUBROUTINE
-38300 '
-38400 '
-38500 LOCATE 15,10
-38600 COLOR 2,0
-38700 PRINT "(Q)uit, "
-38800 IF ORDERNUMBERS% = 1 THEN LASTORDERNUMBERS% = 1: COLOR 14, 0
-38900 LOCATE 15, 18
-39000 PRINT "in (O)rder"
-39100 COLOR 2, 0
-39200 LOCATE 15, 28
-39300 PRINT ", "
-39400 IF ORDERNUMBERS% = 0 THEN LASTORDERNUMBERS% = 0: COLOR 14, 0
-39500 LOCATE 15, 30
-39600 PRINT "(U)nsorted"
-39700 COLOR 2, 0
-39800 LOCATE 15,40 
-39900 PRINT ", (P)owerball, (M)ega Millions"
-40000 PRINT ""
-40100 LOCATE 17,17
-40200 PRINT "(L)otto Texas, (C)ash Five, Pick (3), (D)aily 4"
-40300 PRINT ""
-40400 LOCATE 19, 17
-40500 PRINT "(A)ll or Nothing, (T)exas Two Step, or (R)andom"
-40600 RETURN 
-40601 ' 
-40602 ' ***********************************************************
-40603 '  
-40604 ' CHECK IF SORT ALLOWED
-40605 '
-40610 IF LASTGAME% = 6 OR LASTGAME% = 7 THEN BEEP: RETURN ' SORT NOT ALLOWED FOR THESE GAMES
-40615 ORDERNUMBERS% = 1
-40620 GOSUB 38500: GOSUB 36600
-40700 ' 
-40800 ' ***********************************************************
-40900 '  
-41000 ' INPUT SECTION
-41100 '
-41200 '
-41300 IF FIRSTRUN% = 1 THEN GOTO 42900      
-41400 IN$ = INKEY$
-41500 IF IN$ = "" THEN 41400
-41600 IF IN$ = "q" OR IN$ = "Q" THEN CLS : COLOR 7,0: END
-41700 IF IN$ = "o" OR IN$ = "O" THEN GOSUB 40610
-41800 IF IN$ = "u" OR IN$ = "U" THEN ORDERNUMBERS% = 0: GOSUB 38500: GOSUB 36600
-41900 IF IN$ = "p" OR IN$ = "P" THEN GOTO 3900     ' Powerball
-42000 IF IN$ = "m" OR IN$ = "M" THEN GOTO 6200     ' Mega Millions
-42100 IF IN$ = "l" OR IN$ = "L" THEN GOTO 8500     ' Lotto Texas
-42200 IF IN$ = "c" OR IN$ = "C" THEN GOTO 20200    ' Cash Five
-42300 IF IN$ = "d" OR IN$ = "D" THEN GOTO 17800    ' Daily 4
-42400 IF IN$ = "a" OR IN$ = "A" THEN GOTO 13100    ' All or Nothing
-42500 IF IN$ = "t" OR IN$ = "T" THEN GOTO 10800    ' Texas Two Step
-42600 IF IN$ = "r" OR IN$ = "R" THEN GOTO 43000    ' Random
-42700 IF IN$ = "3" THEN GOTO 15400                 ' Pick 3
-42800 GOTO 41400
-42900 FIRSTRUN% = 0
-43000 GAME% = INT(RND * 8) + 1
-43100 IF GAME% = 1 THEN GOTO 3900
-43200 IF GAME% = 2 THEN GOTO 6200
-43300 IF GAME% = 3 THEN GOTO 8500
-43400 IF GAME% = 4 THEN GOTO 20200
-43500 IF GAME% = 5 THEN GOTO 15400
-43600 IF GAME% = 6 THEN GOTO 17800
-43700 IF GAME% = 7 THEN GOTO 13100
-43800 GOTO 10800
+30500 FOR LOOP1% = 1 TO 6
+30600 LPRINT BANNER$(LOOP1%)
+30700 NEXT LOOP1%
+30800 OUTPUT$ = ""
+30900 ADDCOMMA% = 0
+31000 FOR LOOP1% = 0 TO BALLCOUNT% - 1
+31100 IF ADDCOMMA% = 1 THEN OUTPUT$ = OUTPUT$ + ","
+31200 IF ORDERNUMBERS% = 0 THEN MYOUT$ = STR$(BALLS%(LOOP1%)) ELSE MYOUT$ = STR$(SORTEDBALLS%(LOOP1%))
+31300 OUTPUT$ = OUTPUT$ + MYOUT$
+31400 ADDCOMMA% = 1
+31500 NEXT LOOP1%
+31600 IF HASBONUSBALL% = 0 THEN GOTO 31800
+31700 OUTPUT$ = OUTPUT$ + " Bonus Ball:" + STR$(BONUSBALL%)
+31800 LPRINT OUTPUT$
+31900 GOTO 46000
+32000 '
+32100 ' ***********************************************************  
+32200 '
+32300 ' GENERATE BALLS
+32400 '
+32500 IF ALLOWDUPES% = 0 THEN GOTO 33800
+32600 '
+32700 ' DUPLICATE BALLS OKAY
+32800 '
+32900 FOR LOOP1% = 0 TO BALLCOUNT% - 1
+33000 RBALL% = INT(RND * (BALLMAXNUMBER% + 1)) + BALLMINNUMBER%
+33100 BALLS%(LOOP1%) = RBALL%
+33200 SORTEDBALLS%(LOOP1%) = RBALL%
+33300 NEXT LOOP1%
+33400 GOTO 36500
+33500 '
+33600 ' NO DUPLICATE BALLS ALLOWED
+33700 '
+33800 COUNTER% = BALLMINNUMBER%
+33900 FOR LOOP1% = 0 TO BALLMAXNUMBER% - BALLMINNUMBER%
+34000 TEMPBALLS%(LOOP1%) = COUNTER%
+34100 COUNTER% = COUNTER% + 1
+34200 NEXT LOOP1%
+34300 '
+34400 ' RANDOMIZE TEMP BALL ARRAY
+34500 '
+34600 FOR LOOP1% = 0 TO BALLMAXNUMBER% - BALLMINNUMBER%
+34700 TEMP% = TEMPBALLS%(LOOP1%)
+34800 INDEX% = INT(RND * BALLMAXNUMBER% - BALLMINNUMBER% + 1)
+34900 '
+35000 TEMPBALLS%(LOOP1%) = TEMPBALLS%(INDEX%)
+35100 TEMPBALLS%(INDEX%) = TEMP%
+35200 NEXT LOOP1%
+35300 '
+35400 ' PUT RANDOMIZED BALLS IN BALL ARRAY
+35500 '
+35600 FOR LOOP1% = 0 TO BALLCOUNT% - 1
+35700 BALLS%(LOOP1%) = TEMPBALLS%(LOOP1%)
+35800 SORTEDBALLS%(LOOP1%) = TEMPBALLS%(LOOP1%)
+35900 NEXT LOOP1%
+36000 '
+36100 ' ***********************************************************  
+36200 '
+36300 ' CREATE TITLE WITH GAME RULES
+36400 '
+36500 IF CURRENTGAME% = LASTGAME% THEN GOTO 37100                
+36600 TEMP1$ = STR$(BALLMINNUMBER%)
+36700 TEMP1$ = MID$(TEMP1$, 2, LEN(TEMP1$) - 1)
+36800 TEMP2$ = STR$(BALLMAXNUMBER%)
+36900 TEMP2$ = MID$(TEMP2$, 2, LEN(TEMP2$) - 1)
+37000 TITLE$ = " " + GAMENAME$ + " :" + STR$(BALLCOUNT%) + "  " + TEMP1$ + "-" + TEMP2$ + " "
+37100 IF HASBONUSBALL% = 0 THEN GOTO 38300
+37200 '
+37300 ' ***********************************************************  
+37400 ' SELECT BONUS BALL
+37500 '
+37600 BONUSBALL% = INT(RND * BONUSBALLMAXNUMBER%) + BONUSBALLMINNUMBER%
+37700 IF CURRENTGAME% = LASTGAME% THEN GOTO 39000
+37800 TEMP1$ = STR$(BONUSBALLMINNUMBER%)
+37900 TEMP1$ = MID$(TEMP1$, 2, LEN(TEMP1$) - 1)
+38000 TEMP2$ = STR$(BONUSBALLMAXNUMBER%)
+38100 TEMP2$ = MID$(TEMP2$, 2, LEN(TEMP2$) - 1)
+38200 TITLE$ = TITLE$ + " and" + STR$(BONUSBALLMINNUMBER%) + "  " + TEMP1$ + "-" + TEMP2$ + " "
+38300 IF CURRENTGAME% = LASTGAME% THEN GOTO 39000
+38400 GOSUB 24600 ' PRINT TITLE
+38500 '
+38600 ' ***********************************************************
+38700 '
+38800 ' BUBBLE SORT
+38900 '
+39000 FOR LOOP1% = 0 TO BALLCOUNT% - 2
+39100 FOR LOOP2% = 0 TO BALLCOUNT% - 2
+39200 IF SORTEDBALLS%(LOOP2%) > SORTEDBALLS%(LOOP2%  + 1) THEN GOSUB 39600
+39300 NEXT LOOP2%
+39400 NEXT LOOP1%
+39500 GOTO 40500
+39600 TEMP% = SORTEDBALLS%(LOOP2%)
+39700 SORTEDBALLS%(LOOP2%) = SORTEDBALLS%(LOOP2% + 1)
+39800 SORTEDBALLS%(LOOP2% + 1) = TEMP%
+39900 RETURN
+40000 '
+40100 ' ***********************************************************
+40200 '
+40300 ' PRINT BALLS SUBROUTINE
+40400 '
+40500 OUTPUT$ = ""
+40600 ADDCOMMA% = 0
+40700 FOR LOOP1% = 0 TO BALLCOUNT% - 1
+40800 IF ADDCOMMA% = 1 THEN OUTPUT$ = OUTPUT$ + ","
+40900 IF ORDERNUMBERS% = 0 THEN MYOUT$ = STR$(BALLS%(LOOP1%)) ELSE MYOUT$ = STR$(SORTEDBALLS%(LOOP1%))
+41000 OUTPUT$ = OUTPUT$ + MYOUT$
+41100 ADDCOMMA% = 1
+41200 NEXT LOOP1%
+41300 LOCATELINE% = 11
+41400 GOSUB 27600 ' CLEAR LINE
+41500 GOSUB 28600 ' CENTER BALLS
+41600 IF ORDERNUMBERS% <> LASTORDERNUMBERS% THEN GOSUB 42400
+41700 RETURN
+41800 '
+41900 ' ***********************************************************
+42000 '  
+42100 ' MAIN MENU SUBROUTINE
+42200 '
+42300 '
+42400 LOCATE 15,10
+42500 COLOR 2,0
+42600 PRINT "(Q)uit, "
+42700 IF ORDERNUMBERS% = 1 THEN LASTORDERNUMBERS% = 1: COLOR 14, 0
+42800 LOCATE 15, 18
+42900 PRINT "in (O)rder"
+43000 COLOR 2, 0
+43100 LOCATE 15, 28
+43200 PRINT ", "
+43300 IF ORDERNUMBERS% = 0 THEN LASTORDERNUMBERS% = 0: COLOR 14, 0
+43400 LOCATE 15, 30
+43500 PRINT "(U)nsorted"
+43600 COLOR 2, 0
+43700 LOCATE 15,40
+43800 PRINT ", (P)owerball, (M)ega Millions"
+43900 LOCATELINE%  = 17
+44000 CENTERLINE$ = "(L)otto Texas, (C)ash Five, Pick (3), (D)aily 4"
+44100 GOSUB 26800
+44200 LOCATELINE% = 19
+44300 CENTERLINE$ = "(A)ll or Nothing, (T)exas Two Step, (R)andom, or F1=Print"
+44400 GOSUB 26800
+44500 RETURN
+44600 '
+44700 ' ***********************************************************
+44800 '  
+44900 ' CHECK IF SORT ALLOWED
+45000 '
+45100 IF LASTGAME% = 6 OR LASTGAME% = 7 THEN BEEP: RETURN ' SORT NOT ALLOWED FOR THESE GAMES
+45200 ORDERNUMBERS% = 1
+45300 GOSUB 42400: GOSUB 40500
+45400 '
+45500 ' ***********************************************************
+45600 '  
+45700 ' INPUT SECTION
+45800 '
+45900 IF FIRSTRUN% = 1 THEN GOTO 48000    
+46000 COLOR 9, 0
+46100 LOCATELINE% = 23
+46200 CENTERLINE$ = DATE$ + "  " + TIME$
+46300 GOSUB 26800
+46400 IN$ = INKEY$
+46500 IF IN$ = "" THEN 46000
+46600 IF IN$ = "q" OR IN$ = "Q" THEN GOTO 49000
+46700 IF IN$ = "o" OR IN$ = "O" THEN GOSUB 45100
+46800 IF IN$ = "u" OR IN$ = "U" THEN ORDERNUMBERS% = 0: GOSUB 42400: GOSUB 40500
+46900 IF IN$ = "p" OR IN$ = "P" THEN GOTO 4800     ' Powerball
+47000 IF IN$ = "m" OR IN$ = "M" THEN GOTO 7100     ' Mega Millions
+47100 IF IN$ = "l" OR IN$ = "L" THEN GOTO 9400     ' Lotto Texas
+47200 IF IN$ = "c" OR IN$ = "C" THEN GOTO 21100    ' Cash Five
+47300 IF IN$ = "d" OR IN$ = "D" THEN GOTO 18700    ' Daily 4
+47400 IF IN$ = "a" OR IN$ = "A" THEN GOTO 14000    ' All or Nothing
+47500 IF IN$ = "t" OR IN$ = "T" THEN GOTO 11700    ' Texas Two Step
+47600 IF IN$ = "r" OR IN$ = "R" THEN GOTO 48100    ' Random
+47700 IF IN$ = "3" THEN GOTO 16300                 ' Pick 3
+47800 IF IN$ = "1" THEN GOTO 30000
+47900 GOTO 46000
+48000 FIRSTRUN% = 0
+48100 GAME% = INT(RND * 8) + 1
+48200 IF GAME% = 1 THEN GOTO 4800
+48300 IF GAME% = 2 THEN GOTO 7100
+48400 IF GAME% = 3 THEN GOTO 9400
+48500 IF GAME% = 4 THEN GOTO 21100
+48600 IF GAME% = 5 THEN GOTO 16300
+48700 IF GAME% = 6 THEN GOTO 18700
+48800 IF GAME% = 7 THEN GOTO 14000
+48900 GOTO 11700
+49000 '
+49100 ' EXIT PROGRAM AND SET THINGS BACK TO DEFAULT
+49200 '
+49300 CLS
+49400 COLOR 7,0
+49500 KEY 1, "LIST"
+49600 KEY 2, "RUN" + CHR$(&HD)
+49700 KEY 3, "LOAD" + CHR$(&H22)
+49800 KEY 4, "SAVE" + CHR$(&H22)
+49900 KEY 5, "CONT" + CHR$(&HD)
+50000 KEY 6, "," + CHR$(&H22) + "LPT1:" + CHR$(&H22) + CHR$(&HD)
+50100 KEY 7, "TRON" + CHR$(&HD)
+50200 KEY 8, "TROFF" + CHR$(&HD)
+50300 KEY 9, "KEY "
+50400 KEY 10, "SCREEN 0,0,0" + CHR$(&HD)
+50500 KEY ON
+50600 END
 
